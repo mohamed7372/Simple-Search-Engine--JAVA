@@ -14,26 +14,46 @@ public class Main {
 		for (int i = 0; i < allPeople.length; i++) 
 			allPeople[i] = sc.nextLine();
 		
-		System.out.println("\nEnter the number of search queries:");
-		int nbrSearchQue = Integer.valueOf(sc.nextLine());
-		
-		System.out.println();
-		int i = 1;
-		while(i<=nbrSearchQue) {
-			search(allPeople);
-			i++;
+		int fin = 0;
+		while(fin == 0) {
+			menu();
+			int ch = Integer.valueOf(sc.nextLine());
+			switch (ch) {
+			case 1:
+				search(allPeople);
+				break;
+			case 2:
+				listePeople(allPeople);
+				break;
+			case 0:
+				fin = 1;
+				System.out.println("\nBye!");
+				break;
+			default:
+				System.out.println("\nIncorrect option! Try again.");
+			}
 		}
 	}
+	
+	static void menu() {
+		System.out.println("\n=== Menu ===");
+		System.out.println("1. Search information.");
+		System.out.println("2. Print all data.");
+		System.out.println("0. Exit.");
+	}
 	static void search(String[] arr) {
-		System.out.println("Enter data to search people:");
+		System.out.println("\nEnter a name or email to search all suitable people.");
 		String name = sc.nextLine().toLowerCase();
 		
-		String res = "";
 		for (int i = 0; i < arr.length; i++) {
 			String s = arr[i].toLowerCase();
-			if(s.matches(".*" + name + ".*")) 
-				res += arr[i] + "\n";
+			if(s.matches(".*" + name + ".*"))
+				System.out.println(arr[i]);
 		}
-		System.out.println(res.isEmpty() ? "No matching people found.\n" : "\nFound people:\n" + res);
+	}
+	static void listePeople(String[] arr) {
+		System.out.println("\n=== List of people ===");
+		for (int i = 0; i < arr.length; i++) 
+			System.out.println(arr[i]);
 	}
 }
