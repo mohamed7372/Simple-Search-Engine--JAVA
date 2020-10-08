@@ -27,7 +27,7 @@ public class Main {
 				int ch = Integer.valueOf(sc.nextLine());
 				switch (ch) {
 				case 1:
-					search();
+					strategy();
 					break;
 				case 2:
 					listePeople();
@@ -50,18 +50,88 @@ public class Main {
 		System.out.println("2. Print all data.");
 		System.out.println("0. Exit.");
 	}
-	static void search() {
+	
+	static void strategy() {
+		System.out.println("\nSelect a matching strategy: ALL, ANY, NONE");
+		String choise = sc.nextLine();
 		System.out.println("\nEnter a name or email to search all suitable people.");
 		String name = sc.nextLine().toLowerCase();
-		if(words.containsKey(name)) {
-			List<Integer> index = words.get(name);
-			for (Integer i : index) {
-				System.out.println(arr.get(i));
+		switch (choise) {
+		case "ALL":
+			searchAll(name.split(" "));
+			break;
+		case "ANY":
+			searchAny(name.split(" "));
+			break;
+		case "NONE": 
+			searchNone(name.split(" "));
+			break;
+		}
+	}
+	static void searchAny(String[] names) {
+		List<String> res = new ArrayList<String>();
+		for (int i = 0; i < names.length; i++) {
+			if(words.containsKey(names[i])) {
+				List<Integer> index = words.get(names[i]);
+				for (Integer g : index) {
+					if(!res.contains(arr.get(g)))
+						res.add(arr.get(g));
+				}
+			}
+		}
+		if(res.size() != 0) {
+			System.out.println("\n" + res.size() + " persons found:");
+			for (String string : res) {
+				System.out.println(string);
 			}
 		}
 		else
 			System.out.println("No matching people found.");
 	}
+	static void searchAll(String[] names) {
+		List<String> res = new ArrayList<String>();
+		for (int i = 0; i < arr.size(); i++) {
+			boolean t = true;
+			String d = arr.get(i).toLowerCase();
+			for (int j = 0; j < names.length; j++) {
+				if(!d.matches(".*" + names[j] + ".*")) {
+					t = false;
+					break;
+				}
+			}
+			if(t)
+				res.add(arr.get(i));
+		}
+		if(res.size() != 0) {
+			System.out.println("\n" + res.size() + " persons found:");
+			for (String string : res) {
+				System.out.println(string);
+			}
+		}
+		else
+			System.out.println("No matching people found.");
+	}
+	static void searchNone(String[] names) {
+		List<String> res = new ArrayList<String>(arr);
+		for (int i = 0; i < names.length; i++) {
+			if(words.containsKey(names[i])) {
+				List<Integer> index = words.get(names[i]);
+				for (int g : index) {
+					if(res.contains(arr.get(g)))
+						res.remove(arr.get(g));
+				}
+			}
+		}
+		if(res.size() != 0) {
+			System.out.println("\n" + res.size() + " persons found:");
+			for (String string : res) {
+				System.out.println(string);
+			}
+		}
+		else
+			System.out.println("No matching people found.");
+	}
+		
 	static void listePeople() {
 		System.out.println("\n=== List of people ===");
 		for (int i = 0; i < arr.size(); i++) 
@@ -82,7 +152,6 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-
 	static void indexingWord() {
 		ArrayList<String> allWord = new ArrayList<String>(); 
 		for (int i = 0; i < arr.size(); i++) {
